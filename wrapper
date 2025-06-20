@@ -1,0 +1,32 @@
+module wrapper(input [7:0] exponent_in, input sign_in, input [22:0] mantissa_in, output reg [7:0] exponent_out, output reg sign_out, output reg [22:0] mantissa_out);
+
+wire [7:0] comp_exponent_out, pos_exponent_out, neg_exponent_out;
+wire comp_sign_out, pos_sign_out, neg_sign_out;
+wire [22:0] comp_mantissa_out, pos_mantissa_out, neg_mantissa_out;
+
+compare comp(exponent_in, sign_in, comp_exponent_out, comp_sign_out, comp_mantissa_out);
+pos_input p0(exponent_in, sign_in, mantissa_in, pos_exponent_out, pos_sign_out, pos_mantissa_out);
+neg_input_firsthalf n0(exponent_in, sign_in, mantissa_in, neg_exponent_out, neg_sign_out, neg_mantissa_out);
+
+always @ (*)
+begin
+sign_out = 1'b0;
+
+if (exponent_in[7:0] >= 8'b10000000) 
+begin
+exponent_out = comp_exponent_out; sign_out = comp_sign_out; mantissa_out = comp_mantissa_out;
+end
+
+else if (exponent_in[7:0] <= 8'b01111111 && sign_in == 1'b0)
+begin
+exponent_out = pos_exponent_out; sign_out = pos_sign_out; mantissa_out = pos_mantissa_out;
+end
+
+
+else if (exponent_in[7:0] <= 8'b01111111 && sign_in == 1'b1)
+begin
+exponent_out = neg_exponent_out; sign_out = neg_sign_out; mantissa_out = neg_mantissa_out;
+end
+
+end
+endmodule

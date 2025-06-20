@@ -1,0 +1,21 @@
+module compare(input [7:0] exponent, input sign, output reg [7:0] exp_out, output reg sign_out, output reg [22:0] man_out);
+
+always @ (*)
+begin
+
+if (sign == 1'b0)
+begin
+exp_out[7:0] = 8'b01111111;
+sign_out = 1'b0;
+man_out[22:0] = 23'b00000000000000000000000;
+end
+
+else if (sign == 1'b1)
+begin
+exp_out[7:0] = 8'b00000000;
+sign_out = 1'b0;
+man_out[22:0] = 23'b00000000000000000000000;
+end
+
+end
+endmodule
