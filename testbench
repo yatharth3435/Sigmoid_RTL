@@ -1,0 +1,30 @@
+module tb_sigmoid_imple();
+
+reg [7:0] exponent_in;
+reg sign_in;
+reg [22:0] mantissa_in;
+wire [7:0] exponent_out;
+wire sign_out;
+wire [22:0] mantissa_out;
+
+wrapper w1(exponent_in, sign_in, mantissa_in, exponent_out, sign_out, mantissa_out);
+
+initial
+begin
+
+exponent_in[7:0] = 8'b01111111; sign_in = 1'b0; mantissa_in[22:0] = 23'b01000000000000000000000;   //1.5
+#50 exponent_in[7:0] = 8'b01111110; sign_in = 1'b0; mantissa_in[22:0] = 23'b00000000000000000000000;   //0.5
+#50 exponent_in[7:0] = 8'b01101100; sign_in = 1'b0; mantissa_in[22:0] = 23'b00111000000011100110010;   //0.000002325
+#50 exponent_in[7:0] = 8'b10000100; sign_in = 1'b0; mantissa_in[22:0] = 23'b00011010101110000101001;   //35.34
+#50 exponent_in[7:0] = 8'b01101110; sign_in = 1'b1; mantissa_in[22:0] = 23'b10100011011011100010111;   //-0.0000125
+#50 exponent_in[7:0] = 8'b01111111; sign_in = 1'b1; mantissa_in[22:0] = 23'b00000000000000000000000;   //-1
+#50 exponent_in[7:0] = 8'b01111111; sign_in = 1'b1; mantissa_in[22:0] = 23'b11100101110000101001000;   //-1.8975
+#50 exponent_in[7:0] = 8'b01110100; sign_in = 1'b1; mantissa_in[22:0] = 23'b11010111110110111111010;   //-0.0009
+#50 exponent_in[7:0] = 8'b10000010; sign_in = 1'b1; mantissa_in[22:0] = 23'b00011110011001100110011;   //-8.95
+#50 exponent_in[7:0] = 8'b10000000; sign_in = 1'b0; mantissa_in[22:0] = 23'b00000000001001011100000;   //2.001152
+#50 exponent_in[7:0] = 8'b10000000; sign_in = 1'b1; mantissa_in[22:0] = 23'b00000000001100010010011;   //-2.0015
+#50 exponent_in[7:0] = 8'b01101001; sign_in = 1'b1; mantissa_in[22:0] = 23'b10011000000001011001101;  //-0.00000038
+#50 exponent_in[7:0] = 8'b01100110; sign_in = 1'b0; mantissa_in[22:0] = 23'b11011011111000011110010;
+#10 $finish;
+end
+endmodule
