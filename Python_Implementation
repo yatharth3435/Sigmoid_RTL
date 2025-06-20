@@ -1,0 +1,158 @@
+def compare(exponent, sign):
+    if (exponent >= 0b10000000 and sign == 0):
+        return 1               # input is >= 2
+    elif (exponent >= 0b10000000 and sign == 1):
+        return 0               # input is <= -2
+    else:
+        return None            # input is in (-2, 2)
+
+def between(exponent, mantissa, sign):
+    if (exponent <= 0b01111111 and sign == 0):
+        new_exponent = exponent - 0b00000010      
+        
+        if exponent == 0b01111110:  # Result would be < 0.5
+            final_exponent = 0b01111110  # Exponent for range [0.5, 1.0)
+            final_mantissa = ((mantissa >> 2) ^ 0b01000000000000000000000)& 0b11111111111111111111111
+        elif exponent == 0b01111111:  # Result would be >= 0.5
+            final_exponent = 0b01111110
+            final_mantissa = ((mantissa >> 1) ^ 0b10000000000000000000000) & 0b11111111111111111111111
+        elif exponent == 0b01111101:
+            final_exponent = 0b01111110
+            final_mantissa = ((mantissa >> 3) ^ 0b00100000000000000000000) & 0b11111111111111111111111
+        elif exponent == 0b01111100:
+            final_exponent = 0b01111110
+            final_mantissa = ((mantissa >> 4) ^ 0b00010000000000000000000) & 0b11111111111111111111111
+        elif exponent == 0b01111011:
+            final_exponent = 0b01111110
+            final_mantissa = ((mantissa >> 5) ^ 0b00001000000000000000000) & 0b11111111111111111111111    #& so 
+        elif exponent == 0b01111010:
+            final_exponent = 0b01111110
+            final_mantissa = ((mantissa >> 6) ^ 0b00000100000000000000000) & 0b11111111111111111111111
+        elif exponent == 0b01111001:
+            final_exponent = 0b01111110
+            final_mantissa = ((mantissa >> 7) ^ 0b00000010000000000000000) & 0b11111111111111111111111
+        elif exponent == 0b01111000:
+            final_exponent = 0b01111110
+            final_mantissa = ((mantissa >> 8) ^ 0b00000001000000000000000) & 0b11111111111111111111111
+  if (exponent <= 0b01111111 and sign == 1):
+        new_exponent = exponent - 0b00000010
+
+        if new_exponent == 0b01111100:    #for input range -0.5 to -1
+            final_exponent = 0b01111101
+            final_mantissa = ((mantissa >> 1)  ^ 0b01111111111111111111111) & 0b11111111111111111111111
+
+        elif new_exponent == 0b01111011:   #for input range -0.25 to -0.5
+            final_exponent = 0b01111101
+            final_mantissa = ((mantissa >> 2) ^ 0b10111111111111111111111) & 0b11111111111111111111111
+
+        elif new_exponent == 0b01111010:    #for input range -0.125 to -0.25
+            final_exponent = 0b01111101
+            final_mantissa = ((mantissa >> 3) ^ 0b11011111111111111111111) & 0b11111111111111111111111
+
+        elif new_exponent == 0b01111001:   #for input range -0.0625 to -0.125
+            final_exponent = 0b01111101
+            final_mantissa = ((mantissa >> 4) ^ 0b11101111111111111111111) & 0b11111111111111111111111
+
+        elif new_exponent == 0b01111000:   #for input range -0.03125 to -0.0625
+            final_exponent = 0b01111101
+            final_mantissa = ((mantissa >> 5) ^ 0b11110111111111111111111) & 0b11111111111111111111111
+
+        elif new_exponent == 0b01110111:   #for input range -0.015625 to -0.03125
+            final_exponent = 0b01111101
+            final_mantissa = ((mantissa >> 6) ^ 0b11111011111111111111111) & 0b11111111111111111111111
+
+        elif new_exponent == 0b01110110:   #for input range -0.0078125 to -0.015625
+            final_exponent = 0b01111101
+            final_mantissa = ((mantissa >> 7) ^ 0b11111101111111111111111) & 0b11111111111111111111111
+
+        elif new_exponent == 0b01111101:  #for input of < -1
+            if (mantissa & 0b10000000000000000000000 == 0b00000000000000000000000):  #for input in range -1 to -1.5
+                final_exponent = 0b01111100
+                final_mantissa = ((mantissa << 1)  ^ 0b11111111111111111111111) & 0b11111111111111111111111
+
+            elif (mantissa & 0b01000000000000000000000 == 0b00000000000000000000000):  #for input in range -1.5 to -1.75
+                final_exponent = 0b01111011
+                final_mantissa = ((mantissa << 2)  ^ 0b11111111111111111111111) & 0b11111111111111111111111
+
+            elif (mantissa & 0b00100000000000000000000 == 0b00000000000000000000000):  #for input in range -1.75 to -1.875
+                final_exponent = 0b01111010
+                final_mantissa = ((mantissa << 3)  ^ 0b11111111111111111111111) & 0b11111111111111111111111
+
+            elif (mantissa & 0b00010000000000000000000 == 0b00000000000000000000000):  #for input in range -1.875 to -1.9375
+                final_exponent = 0b01111001
+                final_mantissa = ((mantissa << 4)  ^ 0b11111111111111111111111) & 0b11111111111111111111111
+
+            elif (mantissa & 0b00001000000000000000000 == 0b00000000000000000000000):  #for input in range -1.9375 to -1.96875
+                final_exponent = 0b01111000
+                final_mantissa = ((mantissa << 5)  ^ 0b11111111111111111111111) & 0b11111111111111111111111
+
+            elif (mantissa & 0b00000100000000000000000 == 0b00000000000000000000000):  #for input in range -1.96875 to -1.984375
+                final_exponent = 0b01110111
+                final_mantissa = ((mantissa << 6)  ^ 0b11111111111111111111111) & 0b11111111111111111111111
+
+            elif (mantissa & 0b00000010000000000000000 == 0b00000000000000000000000):  #for input in range -1.984375 to -1.9921875
+                final_exponent = 0b01110110
+                final_mantissa = ((mantissa << 7)  ^ 0b11111111111111111111111) & 0b11111111111111111111111
+
+            elif (mantissa & 0b00000001000000000000000 == 0b00000000000000000000000):  #for input in range -1.9921875 to -1.99609375
+                final_exponent = 0b01110101
+                final_mantissa = ((mantissa << 8)  ^ 0b11111111111111111111111) & 0b11111111111111111111111
+                
+        return final_exponent, final_mantissa
+    else:
+        return exponent, mantissa
+
+def wrapper(exponent, sign, mantissa):
+    sign_out = 0b0
+    compare_result = compare(exponent, sign)
+    
+    if compare_result is not None:
+        if compare_result == 1:
+            # Return 1.0: exponent=127, mantissa=0
+            exponent_out = 0b01111111
+            mantissa_out = 0b00000000000000000000000
+        else:
+            # Return 0.0: exponent=0, mantissa=0
+            exponent_out = 0b00000000
+            mantissa_out = 0b00000000000000000000000
+    else:
+        exponent_out, mantissa_out = between(exponent, mantissa, sign)
+    
+    return sign_out, exponent_out, mantissa_out
+
+print("Enter binary representation for any floating-point number:")
+exponent = int(input("Give the exponent (as binary): "), 2)
+mantissa = int(input("Give the mantissa (as binary): "), 2)
+sign = int(input("Give the sign (0 or 1): "))
+
+# Verify input value
+import struct
+def binary_to_float(sign, exponent, mantissa):
+    bits = (sign << 31) | (exponent << 23) | mantissa
+    packed = struct.pack('>I', bits)
+    return struct.unpack('>f', packed)[0]
+
+input_value = binary_to_float(sign, exponent, mantissa)
+print(f"\nInput value: {input_value}")
+
+# Process through sigmoid approximation
+sign_out, exponent_out, mantissa_out = wrapper(exponent, sign, mantissa)
+
+print(f"\nResults:")
+print(f"sign_out: {sign_out}")
+print(f"exponent_out: {bin(exponent_out)} ({exponent_out:08b}) - 8 bits")
+print(f"mantissa_out: {bin(mantissa_out)} ({mantissa_out:023b}) - 23 bits")
+
+# Verify output value
+output_value = binary_to_float(sign_out, exponent_out, mantissa_out)
+print(f"\nOutput value: {output_value}")
+
+# Show expected mathematical result
+if input_value >= 2:
+    expected = 1.0
+elif input_value <= -2:
+    expected = 0.0
+else:
+    expected = 0.25 * input_value + 0.5
+
+print(f"Expected (0.25x + 0.5): {expected}")
