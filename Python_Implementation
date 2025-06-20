@@ -125,7 +125,6 @@ exponent = int(input("Give the exponent (as binary): "), 2)
 mantissa = int(input("Give the mantissa (as binary): "), 2)
 sign = int(input("Give the sign (0 or 1): "))
 
-# Verify input value
 import struct
 def binary_to_float(sign, exponent, mantissa):
     bits = (sign << 31) | (exponent << 23) | mantissa
@@ -135,7 +134,6 @@ def binary_to_float(sign, exponent, mantissa):
 input_value = binary_to_float(sign, exponent, mantissa)
 print(f"\nInput value: {input_value}")
 
-# Process through sigmoid approximation
 sign_out, exponent_out, mantissa_out = wrapper(exponent, sign, mantissa)
 
 print(f"\nResults:")
@@ -143,11 +141,9 @@ print(f"sign_out: {sign_out}")
 print(f"exponent_out: {bin(exponent_out)} ({exponent_out:08b}) - 8 bits")
 print(f"mantissa_out: {bin(mantissa_out)} ({mantissa_out:023b}) - 23 bits")
 
-# Verify output value
 output_value = binary_to_float(sign_out, exponent_out, mantissa_out)
 print(f"\nOutput value: {output_value}")
 
-# Show expected mathematical result
 if input_value >= 2:
     expected = 1.0
 elif input_value <= -2:
